@@ -1,64 +1,71 @@
 import axios from 'axios';
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || '';
+const api = axios.create({
+  baseURL: API_BASE_URL
+});
+
+
 // Products API
 export const getProducts = async () => {
-  const response = await axios.get('/api/products');
+  const response = await api.get('/api/products');
   return response.data;
 };
 
+
 export const getProduct = async (id) => {
-  const response = await axios.get(`/api/products/${id}`);
+  const response = await api.get(`/api/products/${id}`);
   return response.data;
 };
 
 export const createProduct = async (productData) => {
-  const response = await axios.post('/api/products', productData);
+  const response = await api.post('/api/products', productData);
   return response.data;
 };
 
 export const updateProduct = async (id, productData) => {
-  const response = await axios.put(`/api/products/${id}`, productData);
+  const response = await api.put(`/api/products/${id}`, productData);
   return response.data;
 };
 
 export const deleteProduct = async (id) => {
-  const response = await axios.delete(`/api/products/${id}`);
+  const response = await api.delete(`/api/products/${id}`);
   return response.data;
 };
 
 export const getLowStockProducts = async () => {
-  const response = await axios.get('/api/products/low-stock');
+  const response = await api.get('/api/products/low-stock');
   return response.data;
 };
 
 // Suppliers API
 export const getSuppliers = async () => {
-  const response = await axios.get('/api/suppliers');
+  const response = await api.get('/api/suppliers');
   return response.data;
 };
 
 export const getSupplier = async (id) => {
-  const response = await axios.get(`/api/suppliers/${id}`);
+  const response = await api.get(`/api/suppliers/${id}`);
   return response.data;
 };
 
 export const createSupplier = async (supplierData) => {
-  const response = await axios.post('/api/suppliers', supplierData);
+  const response = await api.post('/api/suppliers', supplierData);
   return response.data;
 };
 
 export const updateSupplier = async (id, supplierData) => {
-  const response = await axios.put(`/api/suppliers/${id}`, supplierData);
+  const response = await api.put(`/api/suppliers/${id}`, supplierData);
   return response.data;
 };
 
 export const deleteSupplier = async (id) => {
-  const response = await axios.delete(`/api/suppliers/${id}`);
+  const response = await api.delete(`/api/suppliers/${id}`);
   return response.data;
 };
 
 export const getSuppliersWithDebt = async () => {
-  const response = await axios.get('/api/suppliers/with-debt');
+  const response = await api.get('/api/suppliers/with-debt');
   return response.data;
 };
 
@@ -72,28 +79,28 @@ export const getStockIns = async (filters = {}) => {
   if (filters.product) queryParams.append('product', filters.product);
   if (filters.paymentStatus) queryParams.append('paymentStatus', filters.paymentStatus);
   
-  const url = `/api/stock-in?${queryParams.toString()}`;
-  const response = await axios.get(url);
+  const url = `/api/stock-ins?${queryParams.toString()}`;
+  const response = await api.get(url);
   return response.data;
 };
 
 export const getStockIn = async (id) => {
-  const response = await axios.get(`/api/stock-in/${id}`);
+  const response = await api.get(`/api/stock-ins/${id}`);
   return response.data;
 };
 
 export const createStockIn = async (stockInData) => {
-  const response = await axios.post('/api/stock-in', stockInData);
+  const response = await api.post('/api/stock-ins', stockInData);
   return response.data;
 };
 
 export const updateStockIn = async (id, stockInData) => {
-  const response = await axios.put(`/api/stock-in/${id}`, stockInData);
+  const response = await api.put(`/api/stock-ins/${id}`, stockInData);
   return response.data;
 };
 
 export const deleteStockIn = async (id) => {
-  const response = await axios.delete(`/api/stock-in/${id}`);
+  const response = await api.delete(`/api/stock-ins/${id}`);
   return response.data;
 };
 
@@ -106,33 +113,33 @@ export const getStockOuts = async (filters = {}) => {
   if (filters.product) queryParams.append('product', filters.product);
   if (filters.customer) queryParams.append('customer', filters.customer);
   
-  const url = `/api/stock-out?${queryParams.toString()}`;
-  const response = await axios.get(url);
+  const url = `/api/stock-outs?${queryParams.toString()}`;
+  const response = await api.get(url);
   return response.data;
 };
 
 export const getStockOut = async (id) => {
-  const response = await axios.get(`/api/stock-out/${id}`);
+  const response = await api.get(`/api/stock-outs/${id}`);
   return response.data;
 };
 
 export const createStockOut = async (stockOutData) => {
-  const response = await axios.post('/api/stock-out', stockOutData);
+  const response = await api.post('/api/stock-outs', stockOutData);
   return response.data;
 };
 
 export const updateStockOut = async (id, stockOutData) => {
-  const response = await axios.put(`/api/stock-out/${id}`, stockOutData);
+  const response = await api.put(`/api/stock-outs/${id}`, stockOutData);
   return response.data;
 };
 
 export const deleteStockOut = async (id) => {
-  const response = await axios.delete(`/api/stock-out/${id}`);
+  const response = await api.delete(`/api/stock-outs/${id}`);
   return response.data;
 };
 
 export const getTodaySales = async () => {
-  const response = await axios.get('/api/stock-out/today');
+  const response = await api.get('/api/reports/today-sales');
   return response.data;
 };
 
@@ -171,7 +178,7 @@ export const getSalesReport = async (startDate, endDate) => {
       source.cancel('Request timed out after 10 seconds');
     }, 10000);
 
-    const response = await axios.get('/api/reports/sales', {
+    const response = await api.get('/api/reports/sales', {
       params: {
         startDate: formattedStartDate,
         endDate: formattedEndDate
@@ -257,34 +264,36 @@ export const getSalesReport = async (startDate, endDate) => {
 };
 
 export const getProductSalesReport = async (startDate, endDate) => {
-  const response = await axios.get(`/api/reports/product-sales?startDate=${startDate}&endDate=${endDate}`);
+  const response = await api.get('/api/reports/product-sales', {
+    params: { startDate, endDate }
+  });
   return response.data;
 };
 
 export const getStockStatusReport = async () => {
-  const response = await axios.get('/api/reports/stock-status');
+  const response = await api.get('/api/reports/stock-status');
   return response.data;
 };
 
 export const getSupplierDeliveriesReport = async (startDate, endDate, supplierId = '') => {
   const url = `/api/reports/supplier-deliveries?startDate=${startDate}&endDate=${endDate}${supplierId ? `&supplierId=${supplierId}` : ''}`;
-  const response = await axios.get(url);
+  const response = await api.get(url);
   return response.data;
 };
 
 export const getProfitReport = async (startDate, endDate) => {
-  const response = await axios.get(`/api/reports/profit?startDate=${startDate}&endDate=${endDate}`);
+  const response = await api.get(`/api/reports/profit?startDate=${startDate}&endDate=${endDate}`);
   return response.data;
 };
 
 export const getOutstandingDebtsReport = async () => {
-  const response = await axios.get('/api/reports/outstanding-debts');
+  const response = await api.get('/api/reports/outstanding-debts');
   return response.data;
 };
 
 export const getActivityReport = async (startDate, endDate) => {
   try {
-    const response = await axios.get('/api/reports/activities', {
+    const response = await api.get('/api/reports/activity', {
       params: { startDate, endDate }
     });
     
